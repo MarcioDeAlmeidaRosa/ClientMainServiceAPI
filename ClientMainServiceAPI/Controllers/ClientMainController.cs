@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ClientMainServiceAPI.Contracts;
+using System;
 using System.Web.Http;
 
 namespace ClientMainServiceAPI.Controllers
 {
     [RoutePrefix("api/ClientMain")]
-    public class ClientMainController : ApiController
+    public class ClientMainController : ApiController, IClientMain
     {
         [AcceptVerbs("GET")]
         [Route("GetByID/{id}")]
