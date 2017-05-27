@@ -1,7 +1,7 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ClientMainServiceAPI.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ClientMainServiceAPI.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ClientMainServiceAPI.Tests.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ClientMainServiceAPI.Tests.App_Start.NinjectWebCommon), "Stop")]
 
-namespace ClientMainServiceAPI.App_Start
+namespace ClientMainServiceAPI.Tests.App_Start
 {
     using System;
     using System.Web;
@@ -44,7 +44,7 @@ namespace ClientMainServiceAPI.App_Start
             var kernel = new StandardKernel();
             try
             {
-                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                //kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
                 RegisterServices(kernel);
