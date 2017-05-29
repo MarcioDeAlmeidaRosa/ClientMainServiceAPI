@@ -17,7 +17,7 @@ namespace ClientMainServiceAPI.Controller
 
         public PersonController()
         {
-            _model = new PersonModel("client-api", "Persons");
+            _model = new PersonModel();
         }
 
         public Person CreatePerson(Person person)

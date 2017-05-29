@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using ClientMainServiceAPI.Domain;
 using System;
-using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace ClientMainServiceAPI.Model.DB
 {
@@ -37,15 +37,17 @@ namespace ClientMainServiceAPI.Model.DB
             _collectionName = collectionName;
         }
 
-        public T Create(T entity)
+        public virtual T Create(T entity)
         {
             _db.GetCollection<T>(_collectionName).InsertOne(entity);
             return entity;
         }
 
-        public T GetById(string id)
+        public virtual T GetById(string id)
         {
-            return _db.GetCollection<T>(_collectionName).Find(c => c.Id.Equals(id)).FirstOrDefault();
+            return _db.GetCollection<T>(_collectionName)
+                .Find(filtro => filtro.Id == new ObjectId(id))
+                .FirstOrDefault();
         }
     }
 }

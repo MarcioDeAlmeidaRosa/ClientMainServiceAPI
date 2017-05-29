@@ -57,7 +57,9 @@
     <Compile Include="Contracts\IDBFactory.cs" />
     <Compile Include="Contracts\IPersonModel.cs" />
     <Compile Include="DB\DBFactory.cs" />
+    <Compile Include="LegalPersonModel.cs" />
     <Compile Include="PersonModel.cs" />
+    <Compile Include="PhysicalPersonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

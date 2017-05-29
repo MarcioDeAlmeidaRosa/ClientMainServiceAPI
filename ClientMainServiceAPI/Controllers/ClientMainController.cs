@@ -14,7 +14,7 @@ namespace ClientMainServiceAPI.Controllers
 
         public ClientMainController(IPersonModel model)
         {
-            this._model = model;
+            _model = model;
         }
 
         [AcceptVerbs("GET")]
