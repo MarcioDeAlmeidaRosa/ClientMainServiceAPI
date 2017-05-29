@@ -117,9 +117,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClientMainServiceAPI.Model\ClientMainServiceAPI.Model.csproj">
-      <Project>{C7CE2088-8912-495A-823F-A7111846F28C}</Project>
-      <Name>ClientMainServiceAPI.Model</Name>
+    <ProjectReference Include="..\ClientMainServiceAPI.Controller\ClientMainServiceAPI.Controller.csproj">
+      <Project>{ce41354c-29e4-442d-af5d-a437bc2313a5}</Project>
+      <Name>ClientMainServiceAPI.Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClientMainServiceAPI.Domain\ClientMainServiceAPI.Domain.csproj">
+      <Project>{4d7a7127-6d0e-4863-bbcc-014ecdf39485}</Project>
+      <Name>ClientMainServiceAPI.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\ClientMainServiceAPI\ClientMainServiceAPI.csproj">
       <Project>{A7C4EBF2-3982-41F0-BB09-286E826C672C}</Project>

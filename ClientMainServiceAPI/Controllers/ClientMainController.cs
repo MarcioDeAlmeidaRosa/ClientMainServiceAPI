@@ -1,6 +1,6 @@
 ﻿using ClientMainServiceAPI.Contracts;
 using ClientMainServiceAPI.Domain;
-using ClientMainServiceAPI.Model.Contracts;
+using ClientMainServiceAPI.Controller.Contracts;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -43,7 +43,7 @@ namespace ClientMainServiceAPI.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                return BadRequest(ex.Message);
             }
             return Ok(result);
         }

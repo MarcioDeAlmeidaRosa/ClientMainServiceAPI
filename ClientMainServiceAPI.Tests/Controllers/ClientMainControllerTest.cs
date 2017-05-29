@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClientMainServiceAPI.Controllers;
-using ClientMainServiceAPI.Model.Contracts;
+using ClientMainServiceAPI.Controller.Contracts;
 using System.Web.Http.Results;
 
 namespace ClientMainServiceAPI.Tests.Controllers

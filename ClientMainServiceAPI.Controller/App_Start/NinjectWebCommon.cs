@@ -1,7 +1,7 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ClientMainServiceAPI.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ClientMainServiceAPI.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ClientMainServiceAPI.Controller.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ClientMainServiceAPI.Controller.App_Start.NinjectWebCommon), "Stop")]
 
-namespace ClientMainServiceAPI.App_Start
+namespace ClientMainServiceAPI.Controller.App_Start
 {
     using System;
     using System.Web;
@@ -10,8 +10,7 @@ namespace ClientMainServiceAPI.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using ClientMainServiceAPI.Controller.Contracts;
-    using ClientMainServiceAPI.Controller;
+    using ClientMainServiceAPI.Model;
 
     public static class NinjectWebCommon 
     {
@@ -45,7 +44,8 @@ namespace ClientMainServiceAPI.App_Start
             try
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+                //TODO - ACERTAR VINCULO
+                /*kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>()*/;
 
                 RegisterServices(kernel);
                 return kernel;
@@ -63,7 +63,7 @@ namespace ClientMainServiceAPI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IPersonModel>().To<PersonController>().InRequestScope();
+            kernel.Bind<PersonModel>().To<PersonModel>().InRequestScope();
         }        
     }
 }

@@ -65,13 +65,16 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -191,13 +194,13 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientMainServiceAPI.Controller\ClientMainServiceAPI.Controller.csproj">
+      <Project>{ce41354c-29e4-442d-af5d-a437bc2313a5}</Project>
+      <Name>ClientMainServiceAPI.Controller</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClientMainServiceAPI.Domain\ClientMainServiceAPI.Domain.csproj">
       <Project>{4d7a7127-6d0e-4863-bbcc-014ecdf39485}</Project>
       <Name>ClientMainServiceAPI.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ClientMainServiceAPI.Model\ClientMainServiceAPI.Model.csproj">
-      <Project>{c7ce2088-8912-495a-823f-a7111846f28c}</Project>
-      <Name>ClientMainServiceAPI.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

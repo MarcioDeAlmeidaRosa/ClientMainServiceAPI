@@ -2,9 +2,8 @@
 
 namespace ClientMainServiceAPI.Domain
 {
-    public abstract class Person
+    public abstract class Person: DomainBase
     {
-        public Guid _Id { get; set; }
         public string Name { get; set; }
     }
 }

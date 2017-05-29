@@ -10,8 +10,8 @@ namespace ClientMainServiceAPI.Tests.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using ClientMainServiceAPI.Model.Contracts;
-    using ClientMainServiceAPI.Model;
+    using ClientMainServiceAPI.Controller.Contracts;
+    using ClientMainServiceAPI.Controller;
 
     public static class NinjectWebCommon 
     {
@@ -44,7 +44,7 @@ namespace ClientMainServiceAPI.Tests.App_Start
             var kernel = new StandardKernel();
             try
             {
-                //kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
                 RegisterServices(kernel);
@@ -63,7 +63,7 @@ namespace ClientMainServiceAPI.Tests.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IPersonModel>().To<PersonModel>().InRequestScope();
+            kernel.Bind<IPersonModel>().To<PersonController>().InRequestScope();
         }        
     }
 }
