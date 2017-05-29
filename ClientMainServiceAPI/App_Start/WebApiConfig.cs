@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace ClientMainServiceAPI
 {
@@ -7,6 +8,7 @@ namespace ClientMainServiceAPI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            ((DefaultContractResolver)config.Formatters.JsonFormatter.SerializerSettings.ContractResolver).IgnoreSerializableAttribute = true;
 
             // Web API routes
             config.MapHttpAttributeRoutes();
