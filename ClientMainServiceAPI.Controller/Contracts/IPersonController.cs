@@ -1,8 +1,8 @@
 ﻿using ClientMainServiceAPI.Domain;
 
-namespace ClientMainServiceAPI.Model.Contracts
+namespace ClientMainServiceAPI.Controller.Contracts
 {
-    public interface IPersonModel
+    public interface IPersonController
     {
         Person GetById(string Id);
 

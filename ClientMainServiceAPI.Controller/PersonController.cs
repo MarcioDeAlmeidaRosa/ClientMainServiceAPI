@@ -5,7 +5,7 @@ using ClientMainServiceAPI.Model;
 
 namespace ClientMainServiceAPI.Controller
 {
-    public class PersonController : IPersonModel
+    public class PersonController : IPersonController
     {
         private PersonModel _model;
 

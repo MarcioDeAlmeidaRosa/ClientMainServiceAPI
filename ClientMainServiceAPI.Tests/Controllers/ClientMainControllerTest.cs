@@ -9,9 +9,9 @@ namespace ClientMainServiceAPI.Tests.Controllers
     [TestClass]
     public class ClientMainControllerTest
     {
-        private IPersonModel _model;
+        private IPersonController _model;
 
-        public ClientMainControllerTest(IPersonModel model)
+        public ClientMainControllerTest(IPersonController model)
         {
             this._model = model;
         }

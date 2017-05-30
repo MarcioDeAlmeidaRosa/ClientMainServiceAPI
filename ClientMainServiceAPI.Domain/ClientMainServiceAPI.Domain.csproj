@@ -51,6 +51,7 @@
     <Compile Include="PhysicalDocuments.cs" />
     <Compile Include="PhysicalPerson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -8,7 +8,7 @@ namespace ClientMainServiceAPI.Contracts
     {
         Task<IHttpActionResult> GetByID(string Id);
 
-        Task<IHttpActionResult> CreatePhysicalClient([FromBody] PhysicalPerson person);
+        Task<IHttpActionResult> CreatePhysicalClient([FromBody] PhysicalPerson  person);
 
         Task<IHttpActionResult> CreateLegalClient([FromBody] LegalPerson person);
     }

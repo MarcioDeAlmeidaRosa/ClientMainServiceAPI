@@ -12,6 +12,8 @@ namespace ClientMainServiceAPI.Model.DB
         protected IMongoDatabase _db;
         private string _collectionName;
 
+        public string CollectionName { get { return _collectionName; } }
+
         public DBFactory(string dataBaseName, string collectionName)
         {
             var host = Environment.GetEnvironmentVariable("CNN-MONGO-DB-CLIENT-HOST-API");

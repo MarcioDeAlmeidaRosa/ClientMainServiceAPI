@@ -63,7 +63,8 @@ namespace ClientMainServiceAPI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IPersonModel>().To<PersonController>().InRequestScope();
+            kernel.Bind<IPersonController>().To<PersonController>().InRequestScope();
+            kernel.Bind<IAutenticationController>().To<AutenticationController>().InRequestScope();
         }        
     }
 }

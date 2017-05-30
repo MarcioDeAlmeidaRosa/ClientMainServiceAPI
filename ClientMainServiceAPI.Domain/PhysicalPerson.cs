@@ -2,7 +2,7 @@
 
 namespace ClientMainServiceAPI.Domain
 {
-    public class PhysicalPerson: Person
+    public class PhysicalPerson : Person
     {
         public DateTime Birth { get; set; }
         public int Age { get; set; }
