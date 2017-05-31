@@ -1,7 +1,13 @@
-﻿namespace ClientMainServiceAPI.Model.Contracts
+﻿using ClientMainServiceAPI.Domain;
+using ClientMainServiceAPI.Domain.Model;
+
+namespace ClientMainServiceAPI.Model.Contracts
 {
     public interface IAutenticationModel
     {
-        void ConfirmEmail(string id);
+        void Register(User entity);
+        void ConfirmEmail(string id, string token);
+        ResultAutentication LoginExternalAuthentication(User entity);
+        ResultAutentication LinkExternalAuthentication(LinkUser user);
     }
 }

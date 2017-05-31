@@ -57,13 +57,15 @@
   <ItemGroup>
     <Compile Include="Contracts\IAutenticationModel.cs" />
     <Compile Include="Contracts\IDBFactory.cs" />
+    <Compile Include="Contracts\IUserConnectedModel.cs" />
     <Compile Include="DB\DBFactory.cs" />
     <Compile Include="LegalPersonModel.cs" />
     <Compile Include="PersonModel.cs" />
     <Compile Include="PhysicalPersonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AutenticationModel.cs" />
-    <Compile Include="Utils\Email.cs" />
+    <Compile Include="Tools\Email.cs" />
+    <Compile Include="UserConnectedModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClientMainServiceAPI.Domain\ClientMainServiceAPI.Domain.csproj">

@@ -1,16 +1,17 @@
-﻿using System;
-using ClientMainServiceAPI.Controller.Contracts;
+﻿using ClientMainServiceAPI.Controller.Contracts;
 using ClientMainServiceAPI.Domain;
 using ClientMainServiceAPI.Model;
+using ClientMainServiceAPI.Domain.Model;
+using ClientMainServiceAPI.Model.Contracts;
 
 namespace ClientMainServiceAPI.Controller
 {
     public class AutenticationController : IAutenticationController
     {
-        private AutenticationModel _model;
+        private IAutenticationModel _model;
 
         //TODO - VOLTAR DEPENDÊNCIA
-        //public AutenticationController(AutenticationModel model)
+        //public AutenticationController(IAutenticationModel model)
         //{
         //    this._model = model;
         //}
@@ -20,14 +21,24 @@ namespace ClientMainServiceAPI.Controller
             _model = new AutenticationModel();
         }
 
-        public void Create(User user)
+        public void Register(User user)
         {
-            _model.Create(user);
+            _model.Register(user);
         }
 
-        public void Confirm(string valeu)
+        public void Confirm(string valeu, string token)
         {
-            _model.ConfirmEmail(valeu);
+            _model.ConfirmEmail(valeu, token);
+        }
+
+        public ResultAutentication LoginExternalAuthentication(User user)
+        {
+            return _model.LoginExternalAuthentication(user);
+        }
+
+        public ResultAutentication LinkExternalAuthentication(LinkUser user)
+        {
+            return _model.LinkExternalAuthentication(user);
         }
     }
 }

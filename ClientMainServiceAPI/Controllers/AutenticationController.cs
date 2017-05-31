@@ -1,6 +1,7 @@
 ﻿using ClientMainServiceAPI.Contracts;
 using ClientMainServiceAPI.Controller.Contracts;
 using ClientMainServiceAPI.Domain;
+using ClientMainServiceAPI.Domain.Model;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -38,13 +39,55 @@ namespace ClientMainServiceAPI.Controllers
         {
             try
             {   
-                _model.Create(user);
+                _model.Register(user);
             }
             catch (Exception ex)
             {
                 BadRequest(ex.Message);
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// Metodo responsável por registrar o usário que faz login por um aplicativo externo
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [AcceptVerbs("POST")]
+        [Route("LoginExternalAuthentication")]
+        public async Task<IHttpActionResult> LoginExternalAuthentication([FromBody] User user)
+        {
+            ResultAutentication retorno = null;
+            try
+            {
+                retorno = _model.LoginExternalAuthentication(user);
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message);
+            }
+            return Ok(retorno);
+        }
+
+        /// <summary>
+        /// Metodo responsável por vincular o e-mail de registro com o usuário registrado pelo aplicativo externo
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [AcceptVerbs("POST")]
+        [Route("LinkExternalAuthentication")]
+        public async Task<IHttpActionResult> LinkExternalAuthentication([FromBody] LinkUser user)
+        {
+            ResultAutentication retorno = null;
+            try
+            {
+                retorno = _model.LinkExternalAuthentication(user);
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message);
+            }
+            return Ok(retorno);
         }
     }
 }

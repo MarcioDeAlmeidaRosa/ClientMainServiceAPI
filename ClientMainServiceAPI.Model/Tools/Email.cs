@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Net.Mail;
 
-namespace ClientMainServiceAPI.Model.Utils
+namespace ClientMainServiceAPI.Model.Tools
 {
     public static class Email
     {

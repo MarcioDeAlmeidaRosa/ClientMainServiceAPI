@@ -51,5 +51,17 @@ namespace ClientMainServiceAPI.Model.DB
                 .Find(filtro => filtro.Id == new ObjectId(id))
                 .FirstOrDefault();
         }
+
+        public virtual void DeleteById(string id)
+        {
+            _db.GetCollection<T>(_collectionName)
+                .DeleteOne(filtro => filtro.Id == new ObjectId(id));
+        }
+
+        public void UpdateById(string id, T entity)
+        {
+            _db.GetCollection<T>(_collectionName)
+                .ReplaceOne(doc => doc.Id == new ObjectId(id), entity);
+        }
     }
 }

@@ -266,7 +266,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\Confirmation\Confirm.cshtml" />
+    <Content Include="Views\Confirmation\ConfirmEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
