@@ -5,5 +5,6 @@ namespace ClientMainServiceAPI.Model.Contracts
     public interface IUserConnectedModel
     {
         UserConnected FindByToken(string token);
+        UserConnected FindByUserId(string id);
     }
 }

@@ -17,5 +17,12 @@ namespace ClientMainServiceAPI.Model
                 .Find(filtro => filtro.Token == token)
                 .FirstOrDefault();
         }
+
+        public UserConnected FindByUserId(string id)
+        {
+            return _db.GetCollection<UserConnected>(CollectionName)
+                .Find(filtro => filtro.User == id)
+                .FirstOrDefault();
+        }
     }
 }

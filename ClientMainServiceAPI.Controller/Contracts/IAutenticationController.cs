@@ -9,5 +9,6 @@ namespace ClientMainServiceAPI.Controller.Contracts
         void Confirm(string valeu, string token);
         ResultAutentication LoginExternalAuthentication(User user);
         ResultAutentication LinkExternalAuthentication(LinkUser user);
+        ResultAutentication Login(User entity);
     }
 }

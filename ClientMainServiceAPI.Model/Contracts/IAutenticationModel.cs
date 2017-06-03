@@ -9,5 +9,6 @@ namespace ClientMainServiceAPI.Model.Contracts
         void ConfirmEmail(string id, string token);
         ResultAutentication LoginExternalAuthentication(User entity);
         ResultAutentication LinkExternalAuthentication(LinkUser user);
+        ResultAutentication Login(User entity);
     }
 }

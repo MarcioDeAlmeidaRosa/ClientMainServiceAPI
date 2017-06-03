@@ -40,5 +40,10 @@ namespace ClientMainServiceAPI.Controller
         {
             return _model.LinkExternalAuthentication(user);
         }
+
+        public ResultAutentication Login(User entity)
+        {
+            return _model.Login(entity);
+        }
     }
 }

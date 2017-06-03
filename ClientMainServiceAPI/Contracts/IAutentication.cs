@@ -10,5 +10,6 @@ namespace ClientMainServiceAPI.Contracts
         Task<IHttpActionResult> Register([FromBody] User user);
         Task<IHttpActionResult> LoginExternalAuthentication([FromBody] User user);
         Task<IHttpActionResult> LinkExternalAuthentication([FromBody] LinkUser user);
+        Task<IHttpActionResult> Login([FromBody] User user);
     }
 }

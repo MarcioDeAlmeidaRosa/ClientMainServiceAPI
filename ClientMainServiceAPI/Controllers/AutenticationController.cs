@@ -89,5 +89,21 @@ namespace ClientMainServiceAPI.Controllers
             }
             return Ok(retorno);
         }
+
+        [AcceptVerbs("POST")]
+        [Route("Login")]
+        public async Task<IHttpActionResult> Login([FromBody] User user)
+        {
+            ResultAutentication retorno = null;
+            try
+            {
+                retorno = _model.Login(user);
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message);
+            }
+            return Ok(retorno);
+        }
     }
 }

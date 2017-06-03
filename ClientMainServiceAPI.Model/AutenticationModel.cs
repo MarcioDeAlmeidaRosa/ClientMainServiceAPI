@@ -6,14 +6,17 @@ using ClientMainServiceAPI.Domain;
 using ClientMainServiceAPI.Model.Tools;
 using System.Configuration;
 using ClientMainServiceAPI.Domain.Model;
+using System.Collections.Generic;
 
 namespace ClientMainServiceAPI.Model
 {
     public class AutenticationModel : DBFactory<User>, IAutenticationModel
     {
+        private Int32 timeOutSessionLogin = 0;
+
         public AutenticationModel() : base("client-api", "Users")
         {
-
+            timeOutSessionLogin = Convert.ToInt32(ConfigurationManager.AppSettings["time-out-session-login"]);
         }
 
         public void Register(User entity)
@@ -44,7 +47,7 @@ namespace ClientMainServiceAPI.Model
                 Token = retorno.Token,
                 User = retorno.User.Id.ToString(),
                 LastCall = DateTime.UtcNow,
-                Valid = DateTime.UtcNow.AddMinutes(Convert.ToInt32(ConfigurationManager.AppSettings["time-out-session-login"]))
+                Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin)
             });
         }
 
@@ -103,28 +106,174 @@ namespace ClientMainServiceAPI.Model
             if ((entity.Providers == null) || (entity.Providers.Length < 1))
                 throw new Exception("Provider do usuário não informado");
 
-            ResultAutentication retorno = new ResultAutentication
-            {
-                Token = Guid.NewGuid().ToString(),
-                StatusLogin = StatusLogin.Success
-            };
-            //Localiza registro do usuário já cadastrado
+            //Primeiro acesso do usuário pelo provider - Marca como Failure para requerir o e-mail
+            var retorno = new ResultAutentication { StatusLogin = StatusLogin.Failure };
+
+            //Localiza o usuário se já existe cadastrados pelos providers
             var user = FindByProvider(entity.Providers[0].Key, entity.Providers[0].Login);
 
-            if (user == null)
-            {
-                //Primeiro acesso do usuário pelo provider
-                retorno.User = base.Create(entity);
-                retorno.StatusLogin = StatusLogin.NewUser;
-            }
             //Cria registro de sessão do usuário
-            new UserConnectedModel().Create(new UserConnected
+            if (user != null)
             {
-                Token = retorno.Token,
-                User = retorno.User.Id.ToString(),
-                LastCall = DateTime.Now,
-                Valid = DateTime.Now.AddMinutes(Convert.ToInt32(ConfigurationManager.AppSettings["time-out-session-login"]))
-            });
+                if (user.Blocked)
+                    retorno.StatusLogin = StatusLogin.LockedOut;
+                else if (user.WaitingConfirmation)
+                    retorno.StatusLogin = StatusLogin.RequiresVerification;
+                else
+                {
+                    //Gera o Token liberando o usuário a acessar o sistema
+                    retorno.Token = Guid.NewGuid().ToString();
+                    //Marca o status como liberado
+                    retorno.StatusLogin = StatusLogin.Success;
+                    //Cria registro de conexão do usuário para controlar sessão
+                    new UserConnectedModel().Create(new UserConnected
+                    {
+                        Token = retorno.Token,
+                        User = user.Id.ToString(),
+                        LastCall = DateTime.UtcNow,
+                        Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin)
+                    });
+                }
+            }
+
+            return retorno;
+        }
+
+        public ResultAutentication LinkExternalAuthentication(LinkUser user)
+        {
+            if (user == null)
+                throw new Exception("Usuário não informado");
+
+            if (string.IsNullOrWhiteSpace(user.Email))
+                throw new Exception("Email não informado");
+
+            if (user.Provider == null)
+                throw new Exception("Provider do usuário não informado");
+
+            ResultAutentication retorno = new ResultAutentication { StatusLogin = StatusLogin.Success };
+
+            //Localiza o usuário pelo provider
+            var userProvider = FindByProvider(user.Provider.Key, user.Provider.Login);
+
+            if (userProvider == null)
+            {
+                //Usuário não cadastrado por provider
+                userProvider = FindByEmail(user.Email);
+
+                #region [Cria novo usuário]
+                if (userProvider == null)
+                {
+                    //Cria novo usuário
+                    userProvider = Create(new User()
+                    {
+                        Aplication = user.Aplication,
+                        Blocked = false,
+                        Email = user.Email,
+                        Password = string.Empty,
+                        UserName = user.Name,
+                        WaitingConfirmation = false,
+                        Providers = new[] { new Provider
+                            {
+                                Key = user.Provider.Key ,
+                                Login = user.Provider.Login
+                            }
+                        }
+                    });
+                }
+                #endregion
+
+                #region [Inclui novo provider no usuário já cadastrado]
+                else
+                {
+                    //Inclui novo provider no usuário já cadastrado
+                    var providers = new List<Provider>(userProvider.Providers);
+                    //Adiciona novo na lista
+                    providers.Add(new Provider
+                    {
+                        Key = user.Provider.Key,
+                        Login = user.Provider.Login
+                    });
+                    //Atualiza objeto
+                    userProvider.Providers = providers.ToArray();
+                }
+                #endregion
+            }
+
+            //Atualizar o e-mail no cadastro de usuário
+            userProvider.Email = user.Email;
+            //Verifica se nome foi informado
+            if (string.IsNullOrWhiteSpace(userProvider.UserName))
+                userProvider.UserName = user.Name;
+            userProvider.Blocked = false;
+            userProvider.WaitingConfirmation = false;
+            UpdateById(userProvider.Id.ToString(), userProvider);
+
+            //Enviar e-mail de registro
+            SendEmailConfirmationRegister(user.Email, user.Aplication);
+
+            var userController = new UserConnectedModel();
+            //Verifica se sessão foi criada
+            var token = userController.FindByToken(user.Token);
+            //Cria ou atualiza a sessão
+            if (token == null)
+            {
+                token = new UserConnected();
+                token.LastCall = DateTime.UtcNow;
+                token.Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin);
+                token = userController.Create(token);
+            }
+            else
+            {
+                token.LastCall = DateTime.UtcNow;
+                token.Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin);
+                userController.UpdateById(token.Id.ToString(), token);
+            }
+
+            retorno.Token = token.Token;
+            retorno.User = userProvider;
+
+            return retorno;
+        }
+
+        public ResultAutentication Login(User entity)
+        {
+            ResultAutentication retorno = new ResultAutentication { StatusLogin = StatusLogin.Failure };
+
+            var user = _db.GetCollection<User>(CollectionName)
+                .Find(filtro => filtro.Email == entity.Email && filtro.Password == entity.Password)
+                .FirstOrDefault();
+
+            if (user == null)
+                retorno.StatusLogin = StatusLogin.Failure;
+            else if (user.Blocked)
+                retorno.StatusLogin = StatusLogin.LockedOut;
+            else if (user.WaitingConfirmation)
+                retorno.StatusLogin = StatusLogin.RequiresVerification;
+            else
+            {
+                retorno.StatusLogin = StatusLogin.Success;
+                //Ajusta / atualiza sessão
+                var userController = new UserConnectedModel();
+                //Verifica se sessão foi criada
+                var token = userController.FindByUserId(user.Id.ToString());
+                //Cria ou atualiza a sessão
+                if (token == null)
+                {
+                    token = new UserConnected();
+                    token.LastCall = DateTime.UtcNow;
+                    token.Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin);
+                    token = userController.Create(token);
+                }
+                else
+                {
+                    token.LastCall = DateTime.UtcNow;
+                    token.Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin);
+                    userController.UpdateById(token.Id.ToString(), token);
+                }
+
+                retorno.Token = token.Token;
+                retorno.User = user;
+            }
 
             return retorno;
         }
@@ -135,42 +284,11 @@ namespace ClientMainServiceAPI.Model
             return _db.GetCollection<User>(CollectionName).Find(filter).FirstOrDefault(); ;
         }
 
-        public ResultAutentication LinkExternalAuthentication(LinkUser user)
+        private User FindByEmail(string email)
         {
-            if (user == null)
-                throw new Exception("Usuário não informado");
-
-            if (user.Provider == null)
-                throw new Exception("Provider do usuário não informado");
-
-            ResultAutentication retorno = new ResultAutentication
-            {
-                //Token = Guid.NewGuid().ToString(),
-                StatusLogin = StatusLogin.Success
-            };
-
-            //Localiza registro do usuário já cadastrado
-            var userProvider = FindByProvider(user.Provider.Key, user.Provider.Login);
-
-            //Não encontrado o pré cadastro do usuário
-            if (userProvider == null)
-                throw new Exception("Usuário não autenticado");
-
-            //TODO - JUNTAR USUÁRIOS COM O MESMO E-MAIL, ADICIONANDO A LISTA DE PROVIDERS
-            //Atualizar o e-mail no cadastro de usuário
-            userProvider.Email = user.Email;
-            userProvider.Blocked = false;
-            userProvider.WaitingConfirmation = false;
-            UpdateById(userProvider.Id.ToString(), userProvider);
-
-            //Enviar e-mail de registro
-            SendEmailConfirmationRegister(user.Email, user.Aplication);
-
-            //TODO - ATUALIZAR SESSÃO E DEVOLVER O TOKE NA RESPOSTA
-
-            retorno.User = userProvider;
-
-            return retorno;
+            return _db.GetCollection<User>(CollectionName)
+                .Find(filtro => filtro.Email == email)
+                .FirstOrDefault();
         }
     }
 }
