@@ -11,19 +11,19 @@ namespace ClientMainServiceAPI.Controllers
     /// <summary>
     /// Controle responsável pelos métodos de autenticação
     /// </summary>
-    [RoutePrefix("api/Autentication")]
-    public class AutenticationController : ApiController, IAutentication
+    [RoutePrefix("api/Authentication")]
+    public class AuthenticationController : ApiController, IAuthentication
     {
         /// <summary>
         /// Variável para armazenar o model de autenticação que sejá injetado ao criar este controle
         /// </summary>
-        private IAutenticationController _model;
+        private IAuthenticationController _model;
 
         /// <summary>
         /// Metodo construtor que espera ser injetado o model de autenticação
         /// </summary>
         /// <param name="model"></param>
-        public AutenticationController(IAutenticationController model)
+        public AuthenticationController(IAuthenticationController model)
         {
             _model = model;
         }
@@ -57,7 +57,7 @@ namespace ClientMainServiceAPI.Controllers
         [Route("LoginExternalAuthentication")]
         public async Task<IHttpActionResult> LoginExternalAuthentication([FromBody] User user)
         {
-            ResultAutentication retorno = null;
+            ResultAuthentication retorno = null;
             try
             {
                 retorno = _model.LoginExternalAuthentication(user);
@@ -78,7 +78,7 @@ namespace ClientMainServiceAPI.Controllers
         [Route("LinkExternalAuthentication")]
         public async Task<IHttpActionResult> LinkExternalAuthentication([FromBody] LinkUser user)
         {
-            ResultAutentication retorno = null;
+            ResultAuthentication retorno = null;
             try
             {
                 retorno = _model.LinkExternalAuthentication(user);
@@ -94,7 +94,7 @@ namespace ClientMainServiceAPI.Controllers
         [Route("Login")]
         public async Task<IHttpActionResult> Login([FromBody] User user)
         {
-            ResultAutentication retorno = null;
+            ResultAuthentication retorno = null;
             try
             {
                 retorno = _model.Login(user);

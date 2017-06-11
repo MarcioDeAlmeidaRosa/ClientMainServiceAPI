@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="DomainBase.cs" />
     <Compile Include="Model\LinkUser.cs" />
-    <Compile Include="Model\ResultAutentication.cs" />
+    <Compile Include="Model\ResultAuthentication.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="LegalPerson.cs" />
     <Compile Include="LegalDocuments.cs" />

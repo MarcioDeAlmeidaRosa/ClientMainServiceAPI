@@ -10,11 +10,11 @@ using System.Collections.Generic;
 
 namespace ClientMainServiceAPI.Model
 {
-    public class AutenticationModel : DBFactory<User>, IAutenticationModel
+    public class AuthenticationModel : DBFactory<User>, IAuthenticationModel
     {
         private Int32 timeOutSessionLogin = 0;
 
-        public AutenticationModel() : base("client-api", "Users")
+        public AuthenticationModel() : base("client-api", "Users")
         {
             timeOutSessionLogin = Convert.ToInt32(ConfigurationManager.AppSettings["time-out-session-login"]);
         }
@@ -24,7 +24,7 @@ namespace ClientMainServiceAPI.Model
             if (entity == null)
                 throw new Exception("Usuário não informado");
 
-            ResultAutentication retorno = new ResultAutentication
+            ResultAuthentication retorno = new ResultAuthentication
             {
                 Token = Guid.NewGuid().ToString(),
                 StatusLogin = StatusLogin.Success
@@ -98,7 +98,7 @@ namespace ClientMainServiceAPI.Model
                             aplication);
         }
 
-        public ResultAutentication LoginExternalAuthentication(User entity)
+        public ResultAuthentication LoginExternalAuthentication(User entity)
         {
             if (entity == null)
                 throw new Exception("Usuário não informado");
@@ -107,7 +107,7 @@ namespace ClientMainServiceAPI.Model
                 throw new Exception("Provider do usuário não informado");
 
             //Primeiro acesso do usuário pelo provider - Marca como Failure para requerir o e-mail
-            var retorno = new ResultAutentication { StatusLogin = StatusLogin.Failure };
+            var retorno = new ResultAuthentication { StatusLogin = StatusLogin.Failure };
 
             //Localiza o usuário se já existe cadastrados pelos providers
             var user = FindByProvider(entity.Providers[0].Key, entity.Providers[0].Login);
@@ -139,7 +139,7 @@ namespace ClientMainServiceAPI.Model
             return retorno;
         }
 
-        public ResultAutentication LinkExternalAuthentication(LinkUser user)
+        public ResultAuthentication LinkExternalAuthentication(LinkUser user)
         {
             if (user == null)
                 throw new Exception("Usuário não informado");
@@ -150,7 +150,7 @@ namespace ClientMainServiceAPI.Model
             if (user.Provider == null)
                 throw new Exception("Provider do usuário não informado");
 
-            ResultAutentication retorno = new ResultAutentication { StatusLogin = StatusLogin.Success };
+            ResultAuthentication retorno = new ResultAuthentication { StatusLogin = StatusLogin.Success };
 
             //Localiza o usuário pelo provider
             var userProvider = FindByProvider(user.Provider.Key, user.Provider.Login);
@@ -235,9 +235,9 @@ namespace ClientMainServiceAPI.Model
             return retorno;
         }
 
-        public ResultAutentication Login(User entity)
+        public ResultAuthentication Login(User entity)
         {
-            ResultAutentication retorno = new ResultAutentication { StatusLogin = StatusLogin.Failure };
+            ResultAuthentication retorno = new ResultAuthentication { StatusLogin = StatusLogin.Failure };
 
             var user = _db.GetCollection<User>(CollectionName)
                 .Find(filtro => filtro.Email == entity.Email && filtro.Password == entity.Password)

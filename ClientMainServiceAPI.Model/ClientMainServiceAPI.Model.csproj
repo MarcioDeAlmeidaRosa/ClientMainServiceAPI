@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\IAutenticationModel.cs" />
+    <Compile Include="Contracts\IAuthenticationModel.cs" />
     <Compile Include="Contracts\IDBFactory.cs" />
     <Compile Include="Contracts\IUserConnectedModel.cs" />
     <Compile Include="DB\DBFactory.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="PersonModel.cs" />
     <Compile Include="PhysicalPersonModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AutenticationModel.cs" />
+    <Compile Include="AuthenticationModel.cs" />
     <Compile Include="Tools\Email.cs" />
     <Compile Include="UserConnectedModel.cs" />
   </ItemGroup>

@@ -72,8 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
-    <Compile Include="AutenticationController.cs" />
-    <Compile Include="Contracts\IAutenticationController.cs" />
+    <Compile Include="AuthenticationController.cs" />
+    <Compile Include="Contracts\IAuthenticationController.cs" />
     <Compile Include="Contracts\IPersonController.cs" />
     <Compile Include="PersonController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -64,7 +64,7 @@ namespace ClientMainServiceAPI.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IPersonController>().To<PersonController>().InRequestScope();
-            kernel.Bind<IAutenticationController>().To<AutenticationController>().InRequestScope();
+            kernel.Bind<IAuthenticationController>().To<AuthenticationController>().InRequestScope();
         }        
     }
 }

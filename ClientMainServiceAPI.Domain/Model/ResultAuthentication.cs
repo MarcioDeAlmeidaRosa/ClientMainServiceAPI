@@ -1,6 +1,6 @@
 ﻿namespace ClientMainServiceAPI.Domain.Model
 {
-    public class ResultAutentication
+    public class ResultAuthentication
     {
         public string Token { get; set; }
         public StatusLogin StatusLogin { get; set; }

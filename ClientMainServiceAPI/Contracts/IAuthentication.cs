@@ -5,7 +5,7 @@ using System.Web.Http;
 
 namespace ClientMainServiceAPI.Contracts
 {
-    public interface IAutentication
+    public interface IAuthentication
     {
         Task<IHttpActionResult> Register([FromBody] User user);
         Task<IHttpActionResult> LoginExternalAuthentication([FromBody] User user);

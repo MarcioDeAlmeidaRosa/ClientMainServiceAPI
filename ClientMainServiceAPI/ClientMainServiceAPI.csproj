@@ -226,9 +226,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Contracts\IAutentication.cs" />
+    <Compile Include="Contracts\IAuthentication.cs" />
     <Compile Include="Contracts\IClientMain.cs" />
-    <Compile Include="Controllers\AutenticationController.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\ClientMainController.cs" />
     <Compile Include="Controllers\ConfirmationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

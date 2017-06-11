@@ -7,7 +7,7 @@ namespace ClientMainServiceAPI.Controllers
     [RoutePrefix("Confirmation")]
     public class ConfirmationController : System.Web.Mvc.Controller
     {
-        private IAutenticationController _model;
+        private IAuthenticationController _model;
 
         /// <summary>
         /// Metodo construtor que espera ser injetado o model de autenticação
@@ -22,7 +22,7 @@ namespace ClientMainServiceAPI.Controllers
             //TODO - REMOVER
         public ConfirmationController()
         {
-            _model = new Controller.AutenticationController();
+            _model = new Controller.AuthenticationController();
         }
 
         /// <summary>

@@ -6,9 +6,9 @@ using ClientMainServiceAPI.Model.Contracts;
 
 namespace ClientMainServiceAPI.Controller
 {
-    public class AutenticationController : IAutenticationController
+    public class AuthenticationController : IAuthenticationController
     {
-        private IAutenticationModel _model;
+        private IAuthenticationModel _model;
 
         //TODO - VOLTAR DEPENDÊNCIA
         //public AutenticationController(IAutenticationModel model)
@@ -16,9 +16,9 @@ namespace ClientMainServiceAPI.Controller
         //    this._model = model;
         //}
 
-        public AutenticationController()
+        public AuthenticationController()
         {
-            _model = new AutenticationModel();
+            _model = new AuthenticationModel();
         }
 
         public void Register(User user)
@@ -31,17 +31,17 @@ namespace ClientMainServiceAPI.Controller
             _model.ConfirmEmail(valeu, token);
         }
 
-        public ResultAutentication LoginExternalAuthentication(User user)
+        public ResultAuthentication LoginExternalAuthentication(User user)
         {
             return _model.LoginExternalAuthentication(user);
         }
 
-        public ResultAutentication LinkExternalAuthentication(LinkUser user)
+        public ResultAuthentication LinkExternalAuthentication(LinkUser user)
         {
             return _model.LinkExternalAuthentication(user);
         }
 
-        public ResultAutentication Login(User entity)
+        public ResultAuthentication Login(User entity)
         {
             return _model.Login(entity);
         }
