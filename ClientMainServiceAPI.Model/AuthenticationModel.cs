@@ -13,6 +13,7 @@ namespace ClientMainServiceAPI.Model
     public class AuthenticationModel : DBFactory<User>, IAuthenticationModel
     {
         private Int32 timeOutSessionLogin = 0;
+        private ResultAuthentication resultAut;
 
         public AuthenticationModel() : base("client-api", "Users")
         {
@@ -24,28 +25,49 @@ namespace ClientMainServiceAPI.Model
             if (entity == null)
                 throw new Exception("Usuário não informado");
 
-            ResultAuthentication retorno = new ResultAuthentication
+            var userCheck = FindByEmail(entity.Email);
+            //Checar situação do usuário
+            if (userCheck != null)
             {
-                Token = Guid.NewGuid().ToString(),
-                StatusLogin = StatusLogin.Success
+                if (userCheck.Blocked)
+                    throw new Exception("Usuário já cadastrado e bloqueado");
+
+                if (userCheck.WaitingConfirmation)
+                    throw new Exception("Usuário já cadastrado e aguardando confirmação por e-mail");
+
+                throw new Exception("Usuário já cadastrado");
+            }
+
+            resultAut = new ResultAuthentication
+            {
+                Token = Guid.NewGuid().ToString()
             };
 
             //Marca como aguardando confirmação de e-mail
             entity.WaitingConfirmation = true;
 
-            retorno.User = base.Create(entity);
+            resultAut.User = base.Create(entity);
 
-            Email.SendEmail(entity.Email,
-                entity.Email,
-                "Confirmar registro.",
-                string.Format("{0}{1}/{2}", ConfigurationManager.AppSettings["url-confirm-email"], entity.Id, retorno.Token),
-                entity.Aplication);
+            try
+            {
+                Email.SendEmail(entity.Email,
+                    entity.Email,
+                    "Confirmar registro.",
+                    string.Format("{0}{1}/{2}", ConfigurationManager.AppSettings["url-confirm-email"], entity.Id, resultAut.Token),
+                    entity.Aplication);
+            }
+            catch (Exception ex)
+            {
+                //Remove o registro para o usuário tentar criar de novo.
+                DeleteById(Convert.ToString(resultAut.User.Id));
+                throw ex;
+            }
 
             //Cria registro de sessão do usuário
             new UserConnectedModel().Create(new UserConnected
             {
-                Token = retorno.Token,
-                User = retorno.User.Id.ToString(),
+                Token = resultAut.Token,
+                User = resultAut.User.Id.ToString(),
                 LastCall = DateTime.UtcNow,
                 Valid = DateTime.UtcNow.AddMinutes(timeOutSessionLogin)
             });
@@ -107,7 +129,7 @@ namespace ClientMainServiceAPI.Model
                 throw new Exception("Provider do usuário não informado");
 
             //Primeiro acesso do usuário pelo provider - Marca como Failure para requerir o e-mail
-            var retorno = new ResultAuthentication { StatusLogin = StatusLogin.Failure };
+            var retorno = new ResultAuthentication();
 
             //Localiza o usuário se já existe cadastrados pelos providers
             var user = FindByProvider(entity.Providers[0].Key, entity.Providers[0].Login);
@@ -116,15 +138,15 @@ namespace ClientMainServiceAPI.Model
             if (user != null)
             {
                 if (user.Blocked)
-                    retorno.StatusLogin = StatusLogin.LockedOut;
+                    throw new Exception("Usuário está bloqueado");
+                //retorno.StatusLogin = StatusLogin.LockedOut;
                 else if (user.WaitingConfirmation)
-                    retorno.StatusLogin = StatusLogin.RequiresVerification;
+                    throw new Exception("Por favor, acessar seu e-mail e confirmar o cadastro do usuário");
+                //retorno.StatusLogin = StatusLogin.RequiresVerification;
                 else
                 {
                     //Gera o Token liberando o usuário a acessar o sistema
                     retorno.Token = Guid.NewGuid().ToString();
-                    //Marca o status como liberado
-                    retorno.StatusLogin = StatusLogin.Success;
                     //Cria registro de conexão do usuário para controlar sessão
                     new UserConnectedModel().Create(new UserConnected
                     {
@@ -150,7 +172,7 @@ namespace ClientMainServiceAPI.Model
             if (user.Provider == null)
                 throw new Exception("Provider do usuário não informado");
 
-            ResultAuthentication retorno = new ResultAuthentication { StatusLogin = StatusLogin.Success };
+            var retorno = new ResultAuthentication();
 
             //Localiza o usuário pelo provider
             var userProvider = FindByProvider(user.Provider.Key, user.Provider.Login);
@@ -237,21 +259,20 @@ namespace ClientMainServiceAPI.Model
 
         public ResultAuthentication Login(User entity)
         {
-            ResultAuthentication retorno = new ResultAuthentication { StatusLogin = StatusLogin.Failure };
+            ResultAuthentication retorno = new ResultAuthentication();
 
             var user = _db.GetCollection<User>(CollectionName)
                 .Find(filtro => filtro.Email == entity.Email && filtro.Password == entity.Password)
                 .FirstOrDefault();
 
             if (user == null)
-                retorno.StatusLogin = StatusLogin.Failure;
+                throw new Exception("Usuário não encontrado");
             else if (user.Blocked)
-                retorno.StatusLogin = StatusLogin.LockedOut;
+                throw new Exception("Usuário está bloqueado");
             else if (user.WaitingConfirmation)
-                retorno.StatusLogin = StatusLogin.RequiresVerification;
+                throw new Exception("Por favor, acessar seu e-mail e confirmar o cadastro do usuário");
             else
             {
-                retorno.StatusLogin = StatusLogin.Success;
                 //Ajusta / atualiza sessão
                 var userController = new UserConnectedModel();
                 //Verifica se sessão foi criada

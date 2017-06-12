@@ -5,6 +5,7 @@ using ClientMainServiceAPI.Domain.Model;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace ClientMainServiceAPI.Controllers
 {
@@ -40,12 +41,12 @@ namespace ClientMainServiceAPI.Controllers
             try
             {   
                 _model.Register(user);
+                return Ok();
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                return new BadRequestErrorMessageResult(ex.Message, this);
             }
-            return Ok();
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace ClientMainServiceAPI.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                return new BadRequestErrorMessageResult(ex.Message, this);
             }
             return Ok(retorno);
         }
@@ -85,7 +86,7 @@ namespace ClientMainServiceAPI.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                return new BadRequestErrorMessageResult(ex.Message, this);
             }
             return Ok(retorno);
         }
@@ -101,7 +102,7 @@ namespace ClientMainServiceAPI.Controllers
             }
             catch (Exception ex)
             {
-                BadRequest(ex.Message);
+                return new BadRequestErrorMessageResult(ex.Message, this);
             }
             return Ok(retorno);
         }

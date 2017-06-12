@@ -12,11 +12,13 @@ namespace ClientMainServiceAPI.Model.Tools
             MailMessage mail = null;
             try
             {
+                var userName = Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["email-send-app" + aplication]);
+                var senha = Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["password-send-app" + aplication]);
                 client = new SmtpClient();
                 client.Host = "smtp.gmail.com";
+                client.Port = 587;
                 client.EnableSsl = true;
-                client.Credentials = new System.Net.NetworkCredential(Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["email-send-app" + aplication]),
-                    Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["password-send-app" + aplication]));
+                client.Credentials = new System.Net.NetworkCredential(userName, senha);
                 mail = new MailMessage();
                 mail.Sender = new MailAddress(Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["email-send-app" + aplication]), 
                     Environment.GetEnvironmentVariable(ConfigurationManager.AppSettings["display-email-send-app" + aplication]));
